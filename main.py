@@ -4,22 +4,12 @@ import caesar
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/home')
-def home():
-    if request.method == 'GET':
-        return render_template('index.html')
-    elif request.method == 'POST':
-        return render_template('results.html')
-
-@app.route('/home/results', methods=['POST'])
-def results():
-    rot_amount = request.form.get("rotation-amount")
-    new_text = request.form.get("blocktext")
-    encrypted_msg = caesar.encrypt(new_text, rot_amount)
-    #return encrypted_msg 
-    ## TODO:
-    # run caeser algorithm
-    # receive back a list|string| whatever you want with the answer
-    return render_template('results.html', enc = encrypted_msg, rot = rot_amount, newtext = new_text)
-
+def encrypt():
+    if request.method == 'POST':
+        rot_amount = int(request.form.get("rotation-amount"))
+        new_text = str(request.form.get("blocktext"))
+        encrypted_msg = caesar.encrypt(new_text, rot_amount)
+        return render_template('results.html', rot_amount=rot_amount, new_text=new_text, encrypted_msg=encrypted_msg)
+    return render_template('index.html')
+    
 app.run(debug = True)
